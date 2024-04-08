@@ -200,7 +200,7 @@ export default function App(props) {
                   <img src='/pantip.png' style={{ width: '', height: '48px', backgroundColor: '#EB4343' }} />
                 </Grid>
               </Hidden>
-              <Grid item xs={10} sm={4} md={4}>
+              <Grid item xs={9} sm={4} md={4}>
                 <BootstrapInput
                   placeholder='ค้นหาบน Pantip'
                   id="bootstrap-input"
@@ -225,7 +225,7 @@ export default function App(props) {
                   }
                 />
               </Grid>
-              <Grid item xs={2} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
+              <Grid item xs={3} sm={4} md={4} sx={{ display: 'flex', justifyContent: 'flex-end' }} >
                 <Box sx={{}}>
                   <Hidden smDown>
                     <IconButton
@@ -271,7 +271,7 @@ export default function App(props) {
           <Divider />
           <Toolbar sx={{}}>
             <Grid container alignItems="center">
-              <Grid item xs={10} sm={11} md={11}>
+              <Grid item xs={9} sm={11} md={11}>
                 <Box sx={{ bgcolor: 'white', color: 'black' }}>
                   <Tabs
                     value={value}
@@ -284,7 +284,7 @@ export default function App(props) {
                   </Tabs>
                 </Box>
               </Grid>
-              <Grid item xs={2} sm={1} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid item xs={3} sm={1} md={1} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   sx={{
                     border: '1px solid #E8E8E8',
