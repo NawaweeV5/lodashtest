@@ -187,6 +187,39 @@ const dataPantipRealtime = [
   },
 ]
 
+const dataPantipPick = [
+  {
+    title: 'ระหว่างเงียบหายไปเลยกับค่อยๆ หายไป แบบไหนดีกว่ากัน'
+  },
+  {
+    title: 'แชร์ประสบการณ์... ตามรอย Slam Dunk ที่คามาคุระ-โตเกียว'
+  },
+  {
+    title: 'ถ้าแฟนลบแชทคนคนนึงตลอดมันแปลกใช่ไหมคะ'
+  },
+  {
+    title: 'คุณคิดว่าลักษณะนิสัยของคุณเป็นมิตรหรือว่าเป็นพิษกับเพื่อนร่วมงานคะ?'
+  },
+  {
+    title: 'อะไรคือเหตุผลที่คนวัยเกษียณ ไม่ลงทุนหุ้นปันผล ทั้งที่สะดวก ผลตอบแทนดดี'
+  },
+  {
+    title: 'ใครคือนักร้องนักดนตรีชายคนสำคัญของคุณครับ'
+  },
+  {
+    title: 'แฟนให้เพื่อนผู้หญิงนั่งรถกลับต่างจังหวัดด้วยกันสองต่อสอง แต่เราไม่โอเค เรางี่เง่าไปมั้ยคะ'
+  },
+  {
+    title: 'แม่บอกว่าลูกคนโต ควรมีหน้าที่ดูแลพ่อแม่ยามแก่เฒ่า'
+  },
+  {
+    title: 'HITACHI โพสขอบคุณ แนนทัดดาว'
+  },
+  {
+    title: 'ทำไมที่บ้านต้องรีบให้เด็กจบใหม่มีภาระหนี้สิน'
+  },
+]
+
 export default function App(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
@@ -442,6 +475,45 @@ export default function App(props) {
               ))}
             </Grid>
             {dataPantipRealtime.length > 6 && (
+              <Box sx={{ textAlign: 'center' }}>
+                {showMore ? (
+                  <Button sx={{ width: '100%', border: 'none', color: 'black' }} variant="outlined" onClick={handleShowLess}>ดูน้อยลง</Button>
+                ) : (
+                  <Button sx={{ width: '100%', border: 'none', color: 'black' }} variant="outlined" onClick={handleShowMore}>ดูเพิ่มเติม</Button>
+                )}
+              </Box>
+            )}
+          </Box>
+        </Box>
+        <Box sx={{ border: '1px solid #E8E8E8', mt: '24px', borderRadius: '8px', mb: '24px' }}>
+          <Box sx={{ borderBottom: '1px solid #E8E8E8', p: '8px' }}>
+            <Typography sx={{ fontSize: '16px', fontWeight: '700', color: '#EB4343' }}>
+              Pantip Pick
+            </Typography>
+            <Typography sx={{ fontSize: '12px' }} >
+              กระทู้คุณภาพคัดเลือกโดยทีมงาน Pantip
+            </Typography>
+          </Box>
+          <Box>
+            <Grid container>
+              {dataPantipPick.slice(0, showMore ? dataPantipPick.length : 4).map((item, index) => (
+                <Grid item xs={12} sm={12} md={12} key={index}>
+                  <Box sx={{ p: '8px', border: '1px solid #E8E8E8', minHeight: '80px', display: 'flex', alignItems: 'center' }}>
+                    {isLoading ? (
+                      <>
+                        <Skeleton variant="rectangular" width={'100%'} height={20} />
+                      </>
+                    ) : (
+                      <Typography sx={{ fontWeight: '700' }}>
+                        {item.title}
+                      </Typography>
+                    )}
+
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+            {dataPantipPick.length > 4 && (
               <Box sx={{ textAlign: 'center' }}>
                 {showMore ? (
                   <Button sx={{ width: '100%', border: 'none', color: 'black' }} variant="outlined" onClick={handleShowLess}>ดูน้อยลง</Button>
