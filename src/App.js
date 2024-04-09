@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
@@ -20,8 +21,7 @@ import MenuItem from '@mui/material/MenuItem';
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { Hidden } from "@mui/material";
-import HeadsetIcon from '@mui/icons-material/Headset';
-import PaidIcon from '@mui/icons-material/Paid';
+import Skeleton from '@mui/material/Skeleton';
 
 const CssTextField = styled(TextField)({
   '& label.Mui-focused': {
@@ -120,20 +120,93 @@ ElevationScroll.propTypes = {
   window: PropTypes.func,
 };
 
+const dataHighlight = [
+  {
+    imageSrc: 'https://images.unsplash.com/photo-1530216421037-11e7a48ae76c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    text: '[Pantip Point] ชวนแชร์ภาพความสดชื่นต้อนรับ Summer!'
+  },
+  {
+    imageSrc: 'https://images.unsplash.com/photo-1680458842367-0d47f573ca2b?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    text: 'PANTIP PADCAST 3 อันดับ กระทู้ฮิตบนพันทิปประจำวัน'
+  },
+  {
+    imageSrc: 'https://images.unsplash.com/photo-1696758405345-d814b95a22c7?q=80&w=1839&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    text: 'กิจกรรม "แนะวิธีคลายร้อนต้อนรับซัมเมอร์สุดฮอต'
+  },
+  {
+    imageSrc: 'https://images.unsplash.com/photo-1712417827761-7a68ff4a90f3?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    text: 'ข่าวดี! เพื่อนๆสามารถสร้างรายได้ไปพร้อมกับการใช้งาน'
+  },
+  {
+    imageSrc: 'https://images.unsplash.com/photo-1712415194711-e71f68c368a6?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    text: 'PANTIP PICK OF THE YEAR 2023 - รวม 10 สุดยอดกระทู้'
+  },
+];
+
+const tabTexts = [
+  "รวมมิตร", "ชายคา", "ห้องสมุด", "พันทิป", "ราชดำเนิน",
+  "ไกลบ้าน", "เฉลิมกรุง", "แก็ดเจ็ต", "หอศิลป์", "บางขุนพรหม",
+  "โต๊ะเครื่องแป้ง", "แกลเลอรี่", "กรีนโซน", "ก้นครัว", "กล้อง",
+  "จตุจักร", "เฉลิมไทย", "ซิลิคอนวัลเลย์", "บลูแพลนเน็ต", "มาบุญครอง",
+  "ชานเรือน", "ถนนนักเรียน", "ภูมิภาค", "รัชดา", "ศาลาประชาคม",
+  "ศุภชลาศัย", "สวนลุมพินี", "สีลม", "ศาสนา", "สยามสแควร์", "สินธร",
+  "หว้ากอ", "การ์ตูน", "พรหมชาติ", "กรุงโซล", "บางรัก", "ดิโอลด์สยาม",
+  "ไร้สังกัด"
+];
+
+const dataPantipRealtime = [
+  {
+    title: '[BR]ทำกิจกรรมร่วมกับ PANTIP HAPPY PRIZE ดีขนาดไหนมาดูกัน'
+  },
+  {
+    title: 'ทำไมที่บ้านต้องรีบให้เด็กจบใหม่มีภาระหนี้สิน'
+  },
+  {
+    title: 'พูดเลยว่า BABYMONSTER เตรียมดัง'
+  },
+  {
+    title: 'ทำไมคนไทยที่อายุเยอะๆ หน่อยชอบบอกว่าเมืองไทยในอดีตอากาศไม่ร้อน'
+  },
+  {
+    title: 'หมั้นกันแล้ว ฝ่ายชายควรให้เงินเรามั้ยคะ'
+  },
+  {
+    title: 'ทำไมตึก HYBE ถึงไม่เด่นเรื่องยอดวิวยูทูป'
+  },
+  {
+    title: 'แฟนให้เพื่อนผู้หญิงนั่งรถกลับต่างจังหวัดด้วยกันสองต่อสอง แต่เราไม่โอเค เรางี่เง่าไปมั้ยคะ'
+  },
+  {
+    title: 'แม่บอกว่าลูกคนโต ควรมีหน้าที่ดูแลพ่อแม่ยามแก่เฒ่า'
+  },
+  {
+    title: 'HITACHI โพสขอบคุณ แนนทัดดาว'
+  },
+  {
+    title: 'ทำไมที่บ้านต้องรีบให้เด็กจบใหม่มีภาระหนี้สิน'
+  },
+]
+
 export default function App(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(0);
   const open = Boolean(anchorEl);
-  const tabTexts = [
-    "รวมมิตร", "ชายคา", "ห้องสมุด", "พันทิป", "ราชดำเนิน",
-    "ไกลบ้าน", "เฉลิมกรุง", "แก็ดเจ็ต", "หอศิลป์", "บางขุนพรหม",
-    "โต๊ะเครื่องแป้ง", "แกลเลอรี่", "กรีนโซน", "ก้นครัว", "กล้อง",
-    "จตุจักร", "เฉลิมไทย", "ซิลิคอนวัลเลย์", "บลูแพลนเน็ต", "มาบุญครอง",
-    "ชานเรือน", "ถนนนักเรียน", "ภูมิภาค", "รัชดา", "ศาลาประชาคม",
-    "ศุภชลาศัย", "สวนลุมพินี", "สีลม", "ศาสนา", "สยามสแควร์", "สินธร",
-    "หว้ากอ", "การ์ตูน", "พรหมชาติ", "กรุงโซล", "บางรัก", "ดิโอลด์สยาม",
-    "ไร้สังกัด"
-  ];
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [showMore, setShowMore] = React.useState(false);
+
+  const handleShowMore = () => {
+    setShowMore(true);
+  };
+
+  const handleShowLess = () => {
+    setShowMore(false);
+  };
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
 
   const tabs = tabTexts.map((text, index) => (
     <Tab
@@ -145,11 +218,19 @@ export default function App(props) {
             flexDirection: 'column',
             alignItems: 'center',
             fontSize: '12px',
-            fontWeight: '600'
+            fontWeight: '600',
           }}
         >
-          <CropOriginalIcon sx={{ mb: '4px' }} />
-          {text}
+          {isLoading ? (
+            <Skeleton variant="text" sx={{ width: '20px', height: '30px' }} />
+          ) : (
+            <CropOriginalIcon sx={{ mb: '4px' }} />
+          )}
+          {isLoading ? (
+            <Skeleton variant="text" sx={{ width: '40px', height: '16px' }} />
+          ) : (
+            text
+          )}
         </Box>
       }
     />
@@ -166,27 +247,6 @@ export default function App(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const CustomTab = ({ text, selected }) => (
-    <Tab
-      icon={
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            fontSize: '12px',
-            fontWeight: '600',
-            color: selected ? 'primary.main' : 'inherit', // เลือกสีของ CustomTab เมื่อเลือก
-          }}
-        >
-          <CropOriginalIcon sx={{ mb: '4px' }} />
-          {text}
-        </Box>
-      }
-      selected={selected} // ส่ง props selected ไปยัง Tab component
-    />
-  );
 
 
   return (
@@ -296,7 +356,7 @@ export default function App(props) {
             หน้าแรกพันทิป
           </Typography>
         </Box>
-        <Box sx={{ border: '1px solid #E8E8E8', mt: '12px', borderRadius:'8px' }}>
+        <Box sx={{ border: '1px solid #E8E8E8', mt: '12px', borderRadius: '8px' }}>
           <Box sx={{ borderBottom: '1px solid #E8E8E8', p: '8px' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '700', color: '#EB4343' }}>
               Announce
@@ -319,43 +379,77 @@ export default function App(props) {
             </Typography>
           </Box>
         </Box>
-        <Box sx={{ border: '1px solid #E8E8E8', mt: '24px', borderRadius:'8px' }}>
+        <Box sx={{ border: '1px solid #E8E8E8', mt: '24px', borderRadius: '8px' }}>
           <Box sx={{ borderBottom: '1px solid #E8E8E8', p: '8px' }}>
             <Typography sx={{ fontSize: '16px', fontWeight: '700', color: '#EB4343' }}>
               Highlight
             </Typography>
           </Box>
           <Box sx={{ overflowX: "scroll", p: '16px', display: 'flex' }}>
-            <Box sx={{ display:'flex', textAlign:'center', flexDirection:'column', borderRadius:'8px',  }}>
-              <img style={{ width: '250px', height: '220px' }} src='https://images.unsplash.com/photo-1650220080385-4fe734999c71?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' />
-              <Typography sx={{ fontWeight:'700', p:'8px' }}>
-                [Pantip Point] ชวนแชร์ภาพความสดชื่นต้อนรับ Summer!
-              </Typography>
-            </Box>
-            <Box sx={{ display:'flex', textAlign:'center', flexDirection:'column', borderRadius:'8px', ml:'16px' }}>
-              <img style={{ width: '250px', height: '220px' }} src='https://images.unsplash.com/photo-1650220080385-4fe734999c71?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' />
-              <Typography sx={{ fontWeight:'700', p:'8px' }}>
-                [Pantip Point] ชวนแชร์ภาพความสดชื่นต้อนรับ Summer!
-              </Typography>
-            </Box>
-            <Box sx={{ display:'flex', textAlign:'center', flexDirection:'column', borderRadius:'8px', ml:'16px' }}>
-              <img style={{ width: '250px', height: '220px' }} src='https://images.unsplash.com/photo-1650220080385-4fe734999c71?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' />
-              <Typography sx={{ fontWeight:'700', p:'8px' }}>
-                [Pantip Point] ชวนแชร์ภาพความสดชื่นต้อนรับ Summer!
-              </Typography>
-            </Box>
-            <Box sx={{ display:'flex', textAlign:'center', flexDirection:'column', borderRadius:'8px', ml:'16px' }}>
-              <img style={{ width: '250px', height: '220px' }} src='https://images.unsplash.com/photo-1650220080385-4fe734999c71?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' />
-              <Typography sx={{ fontWeight:'700', p:'8px' }}>
-                [Pantip Point] ชวนแชร์ภาพความสดชื่นต้อนรับ Summer!
-              </Typography>
-            </Box>
-            <Box sx={{ display:'flex', textAlign:'center', flexDirection:'column', borderRadius:'8px', ml:'16px' }}>
-              <img style={{ width: '250px', height: '220px' }} src='https://images.unsplash.com/photo-1650220080385-4fe734999c71?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' />
-              <Typography sx={{ fontWeight:'700', p:'8px' }}>
-                [Pantip Point] ชวนแชร์ภาพความสดชื่นต้อนรับ Summer!
-              </Typography>
-            </Box>
+            {dataHighlight.map((item, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: 'flex',
+                  textAlign: 'center',
+                  flexDirection: 'column',
+                  borderRadius: '8px',
+                  ml: index !== 0 ? '16px' : 0,
+                }}
+              >
+                {isLoading ? (
+                  <Skeleton variant="rectangular" sx={{ width: '250px', height: '220px' }} />
+                ) : (
+                  <img style={{ width: '250px', height: '220px' }} src={item.imageSrc} />
+                )}
+                {isLoading ? (
+                  <Skeleton variant="text" sx={{ width: '250px', height: '16px', mt: '8px' }} />
+                ) : (
+                  <Typography sx={{ fontWeight: '700', p: '8px' }}>
+                    {item.text}
+                  </Typography>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Box>
+        <Box sx={{ border: '1px solid #E8E8E8', mt: '24px', borderRadius: '8px', mb: '24px' }}>
+          <Box sx={{ borderBottom: '1px solid #E8E8E8', p: '8px' }}>
+            <Typography sx={{ fontSize: '16px', fontWeight: '700', color: '#EB4343' }}>
+              Pantip Realtime
+            </Typography>
+            <Typography sx={{ fontSize: '12px' }} >
+              กระทู้ที่มีคนเปิดอ่านมากในขณะนี้ อัปเดตทุกนาที
+            </Typography>
+          </Box>
+          <Box>
+            <Grid container>
+              {dataPantipRealtime.slice(0, showMore ? dataPantipRealtime.length : 6).map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box sx={{ p: '8px', border: '1px solid #E8E8E8', minHeight: '80px', display: 'flex', alignItems: 'center' }}>
+                    {isLoading ? (
+                      <>
+                        <Skeleton variant="rectangular" width={'100%'} height={20} />
+                      </>
+                    ) : (
+                      <Typography sx={{ fontWeight: '700' }}>
+                        {item.title}
+                      </Typography>
+                    )}
+
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+            {dataPantipRealtime.length > 6 && (
+              <Box sx={{ textAlign: 'center' }}>
+                {showMore ? (
+                  <Button sx={{ width: '100%', border: 'none', color: 'black' }} variant="outlined" onClick={handleShowLess}>ดูน้อยลง</Button>
+                ) : (
+                  <Button sx={{ width: '100%', border: 'none', color: 'black' }} variant="outlined" onClick={handleShowMore}>ดูเพิ่มเติม</Button>
+                )}
+              </Box>
+            )}
           </Box>
         </Box>
       </Container>
